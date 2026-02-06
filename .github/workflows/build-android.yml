@@ -49,6 +49,12 @@ jobs:
           echo "Buildozer exit code: ${PIPESTATUS[1]}"
           exit ${PIPESTATUS[1]}
 
+      - name: Show last 150 lines of build log on failure
+        if: failure()
+        run: |
+          echo "========== ULTIME RIGHE DEL LOG (errore qui sotto) =========="
+          tail -150 build.log
+
       - name: Upload build log on failure
         if: failure()
         uses: actions/upload-artifact@v4
