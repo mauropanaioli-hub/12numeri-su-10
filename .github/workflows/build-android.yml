@@ -60,6 +60,15 @@ jobs:
           echo "========== ULTIME RIGHE DEL LOG (errore qui sotto) =========="
           tail -250 build.log
 
+      - name: Show log lines with errors (no env dump)
+        if: failure()
+        run: |
+          echo "========== RIGHE CON error/FAILURE/Exception (causa reale) =========="
+          grep -v "^export " build.log | grep -E -n "error|Error|FAILURE|Exception|failed|BUILD" | tail -80
+          echo ""
+          echo "========== ULTIME 120 RIGHE SENZA export =========="
+          grep -v "^export " build.log | tail -120
+
       - name: Upload build log on failure
         if: failure()
         uses: actions/upload-artifact@v4
