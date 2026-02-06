@@ -1,0 +1,50 @@
+# Build APK Android con Buildozer su GitHub (ambiente Linux)
+# Dopo il push, vai in Actions → Build Android APK → Run workflow → scarica l'APK dagli artifact
+
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:   # Permette di avviare la build a mano dalla tab Actions
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git zip unzip openjdk-17-jdk \
+            autoconf libtool pkg-config zlib1g-dev \
+            libncurses5-dev libncursesw5-dev libtinfo5 \
+            cmake libffi-dev libssl-dev
+
+      - name: Install Buildozer and Cython
+        env:
+          PIP_BREAK_SYSTEM_PACKAGES: 1
+        run: |
+          pip install buildozer setuptools Cython
+
+      - name: Build APK
+        env:
+          PIP_BREAK_SYSTEM_PACKAGES: 1
+        run: |
+          buildozer android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: bin/*.apk

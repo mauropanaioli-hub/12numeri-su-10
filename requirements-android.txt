@@ -1,0 +1,5 @@
+# Per eseguire la versione Android su PC (test)
+# pip install -r requirements-android.txt
+# Poi: python main_android.py
+
+kivy>=2.2.0
