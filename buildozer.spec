@@ -35,6 +35,9 @@ android.sdk = 31
 # Architetture (arm64 per la maggior parte dei dispositivi)
 android.archs = arm64-v8a,armeabi-v7a
 
+# Branch stabile di python-for-android (evita problemi Gradle su CI)
+android.p4a_branch = 2024.01.21
+
 [buildozer]
 
 # Livello di log

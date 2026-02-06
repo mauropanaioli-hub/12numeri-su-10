@@ -69,6 +69,20 @@ jobs:
           echo "========== ULTIME 120 RIGHE SENZA export =========="
           grep -v "^export " build.log | tail -120
 
+      - name: Re-run gradlew with stacktrace to see real error
+        if: failure()
+        env:
+          JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
+        run: |
+          GRADLE_DIR=".buildozer/android/platform/build-arm64-v8a_armeabi-v7a/dists/numeri10elotto"
+          if [ -f "$GRADLE_DIR/gradlew" ]; then
+            chmod +x "$GRADLE_DIR/gradlew"
+            cd "$GRADLE_DIR" && ./gradlew clean assembleDebug --stacktrace 2>&1 | tail -150
+          else
+            echo "Gradle dir not found, listing .buildozer:"
+            find .buildozer -name "gradlew" 2>/dev/null || true
+          fi
+
       - name: Upload build log on failure
         if: failure()
         uses: actions/upload-artifact@v4
