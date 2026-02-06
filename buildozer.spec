@@ -14,8 +14,8 @@ source.include_exts = py,png,jpg,kv,atlas
 source.dir = .
 version = 1.0
 
-# Requisiti Python
-requirements = python3,kivy
+# Requisiti Python (Kivy 2.2.x compatibile con p4a 2024.01.21)
+requirements = python3,kivy==2.2.0
 
 # Orientamento (portrait per smartphone)
 orientation = portrait
@@ -32,8 +32,8 @@ android.minapi = 21
 android.ndk = 25b
 android.sdk = 31
 
-# Architetture (arm64 per la maggior parte dei dispositivi)
-android.archs = arm64-v8a,armeabi-v7a
+# Una sola architettura per evitare fallimenti build Kivy su CI
+android.archs = arm64-v8a
 
 # Branch stabile di python-for-android (evita problemi Gradle su CI)
 android.p4a_branch = 2024.01.21
