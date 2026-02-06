@@ -43,8 +43,9 @@ jobs:
 
       - name: Build APK
         run: |
-          buildozer android debug 2>&1 | tee build.log
-          exit ${PIPESTATUS[0]}
+          # Accetta automaticamente le licenze Android SDK (yes invia "y" al prompt)
+          yes | buildozer android debug 2>&1 | tee build.log
+          exit ${PIPESTATUS[1]}
 
       - name: Upload build log on failure
         if: failure()
