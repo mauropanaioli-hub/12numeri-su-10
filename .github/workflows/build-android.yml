@@ -42,9 +42,11 @@ jobs:
           which cython
 
       - name: Build APK
+        shell: bash
         run: |
-          # Accetta automaticamente le licenze Android SDK (yes invia "y" al prompt)
-          yes | buildozer android debug 2>&1 | tee build.log
+          # Accetta automaticamente le licenze Android SDK; sopprime "Broken pipe" da yes
+          (yes 2>/dev/null || true) | buildozer android debug 2>&1 | tee build.log
+          echo "Buildozer exit code: ${PIPESTATUS[1]}"
           exit ${PIPESTATUS[1]}
 
       - name: Upload build log on failure
