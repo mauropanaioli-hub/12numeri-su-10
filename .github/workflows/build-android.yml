@@ -28,7 +28,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            git zip unzip openjdk-17-jdk \
+            git zip unzip openjdk-11-jdk patch \
             autoconf libtool pkg-config zlib1g-dev \
             libncurses5-dev libncursesw5-dev libtinfo5 \
             cmake libffi-dev libssl-dev
@@ -45,17 +45,20 @@ jobs:
 
       - name: Build APK
         shell: bash
+        env:
+          JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
+          GRADLE_OPTS: -Xmx2048m -Dorg.gradle.daemon=false
         run: |
           # Accetta automaticamente le licenze Android SDK; sopprime "Broken pipe" da yes
           (yes 2>/dev/null || true) | buildozer android debug 2>&1 | tee build.log
           echo "Buildozer exit code: ${PIPESTATUS[1]}"
           exit ${PIPESTATUS[1]}
 
-      - name: Show last 150 lines of build log on failure
+      - name: Show last 250 lines of build log on failure
         if: failure()
         run: |
           echo "========== ULTIME RIGHE DEL LOG (errore qui sotto) =========="
-          tail -150 build.log
+          tail -250 build.log
 
       - name: Upload build log on failure
         if: failure()
